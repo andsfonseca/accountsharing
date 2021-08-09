@@ -1,0 +1,29 @@
+{
+  "name": "accountsharing",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "rimraf ./build && tsc",
+    "start": "npm run build && node build/index.js",
+    "start:dev": "nodemon",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andsfonseca/accountsharing.git"
+  },
+  "author": "@andsfonseca",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/andsfonseca/accountsharing/issues"
+  },
+  "homepage": "https://github.com/andsfonseca/accountsharing#readme",
+  "devDependencies": {
+    "@types/node": "^16.4.13",
+    "nodemon": "^2.0.12",
+    "rimraf": "^3.0.2",
+    "ts-node": "^10.2.0",
+    "typescript": "^4.3.5"
+  }
+}
