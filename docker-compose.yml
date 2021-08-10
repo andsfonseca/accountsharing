@@ -1,0 +1,32 @@
+version: "3.7"
+services:
+  database:
+    image: postgres:alpine
+    environment:
+      POSTGRES_USER_FILE: /run/secrets/user
+      POSTGRES_PASSWORD_FILE: /run/secrets/pass
+      POSTGRES_DB: accountsharing
+    ports: 
+      - '5432:5432'
+    volumes:
+      - app-db:/var/lib/postgresql/data
+    secrets:
+      - user
+      - pass
+
+  app:
+    build:
+      context: .
+    depends_on:
+      - database
+    ports:
+      - '3000:3000'
+
+secrets:
+  user:
+    file: ./docker/postgres/DB_USERNAME
+  pass:
+    file: ./docker/postgres/DB_PASSWORD
+
+volumes:
+  app-db:
