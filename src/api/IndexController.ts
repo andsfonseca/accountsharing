@@ -1,4 +1,4 @@
-import { Route } from "../server/HttpServer";
+import { Route, StatusCode } from "../server/HttpServer";
 
 import Controller from "./Controller";
 
@@ -7,7 +7,8 @@ export class IndexController implements Controller {
     }
 
     @Route("/")
-    Index(): string {
-        return "Hello World!"
+    Index(): any {
+        return new StatusCode(200, "Hello World!")
+        // return "Hello World!"
     }
 }

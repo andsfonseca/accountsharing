@@ -9,6 +9,16 @@ export const Route = (route: string) => (target: any, propertyKey: string, descr
     HttpServer.getInstance().addRoute(route, target[propertyKey]());
 }
 
+export class StatusCode {
+    public code :number;
+    public body: any;
+
+    constructor(code: number, body: any) {
+        this.code = code;
+        this.body = body;
+    }
+}
+
 export class HttpServer {
     private static instance: HttpServer;
 
@@ -28,17 +38,29 @@ export class HttpServer {
         this.app.use(morgan('combined'));
     }
 
-    public addController(controller : typeof Controller){
+    public addController(controller: typeof Controller) {
         this.controllers.push(new controller())
     }
 
-    public addRoute(route:string, callback: any, method :string = "get"){
+    public addRoute(route: string, callback: any, method: string = "get") {
+
+        let body = callback;
+        let code = 200;
+
+        if(callback instanceof StatusCode){
+            let res = (callback as StatusCode)
+            body = res.body;
+            code = res.code;
+        }
+
         this.app.get(route, (req, res) => {
-            res.send(callback);
+            res.status(code);
+            res.setHeader('Content-Type', 'application/json')
+            res.send(JSON.stringify(body));
         });
     }
 
-    public listen() :void{
+    public listen(): void {
         this.app.listen(3001, () => {
             console.log('Listening on port 3001');
         });
