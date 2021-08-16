@@ -5,12 +5,12 @@ import morgan from "morgan";
 
 import Controller from "../api/Controller";
 
-export const Route = (route: string) => (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
-    HttpServer.getInstance().addRoute(route, target[propertyKey]());
+export const Route = (route: string, method: string[] = ["get"]) => (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
+    HttpServer.getInstance().addRoute(route, target[propertyKey](), method);
 }
 
 export class StatusCode {
-    public code :number;
+    public code: number;
     public body: any;
 
     constructor(code: number, body: any) {
@@ -42,22 +42,36 @@ export class HttpServer {
         this.controllers.push(new controller())
     }
 
-    public addRoute(route: string, callback: any, method: string = "get") {
+    public addRoute(route: string, callback: any, methods: string[]) {
 
         let body = callback;
         let code = 200;
 
-        if(callback instanceof StatusCode){
+        if (callback instanceof StatusCode) {
             let res = (callback as StatusCode)
             body = res.body;
             code = res.code;
         }
 
-        this.app.get(route, (req, res) => {
+        let handleRequest = (req: any, res: any) => {
             res.status(code);
             res.setHeader('Content-Type', 'application/json')
             res.send(JSON.stringify(body));
+        }
+
+        methods.forEach(method => {
+            switch (method) {
+                default:
+                case "get": 
+                    this.app.get(route, handleRequest );
+                    break;
+                case "post":
+                    this.app.post(route, handleRequest)
+                    break;
+            }
         });
+
+
     }
 
     public listen(): void {
