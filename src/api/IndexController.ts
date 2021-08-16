@@ -2,7 +2,7 @@ import { Route, StatusCode } from "../server/HttpServer";
 
 import Controller from "./Controller";
 
-export class IndexController implements Controller {
+export default class IndexController implements Controller {
     constructor() {
     }
 
